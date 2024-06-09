@@ -1,22 +1,22 @@
 <template>
   <v-container class="fill-height">
-    <v-responsive class="fill-height mx-auto" max-width="800">
-      <v-row class="fill-height d-flex justify-center align-center">
+    <v-responsive class="fill-height mx-auto max-w-[800px]">
+      <v-row class="fill-height d-flex justify-center items-center">
         <v-col cols="12">
-          <v-card elevation="1" class="w-full bg-sky-50 rounded-lg">
+          <v-card class="md:w-full sm:w-full w-11/12 bg-sky-50 rounded-lg">
             <v-row class="p-6">
-              <v-col class="text-left">
+              <v-col class="text-center text-md-left text-sm-left">
                 <v-btn
                   @click="changeLayout"
                   variant="text"
                   prepend-icon="mdi-eye-settings"
-                  class="w-40 rounded-lg bg-blue-200"
+                  class="sm:w-40 w-full rounded-lg bg-blue-200"
                 >
                   Change Layout
-                </v-btn></v-col
-              >
-              <v-col class="text-right"
-                ><v-dialog
+                </v-btn>
+              </v-col>
+              <v-col class="text-center text-md-right text-sm-right">
+                <v-dialog
                   transition="dialog-bottom-transition"
                   class="w-1/2 h-full"
                 >
@@ -24,10 +24,11 @@
                     <v-btn
                       variant="text"
                       v-bind="activatorProps"
-                      class="w-36 rounded-lg bg-yellow-400 font-satoshi"
+                      class="sm:w-40 w-full rounded-lg bg-yellow-400 font-satoshi"
                       prepend-icon="mdi-crown"
-                      >Leaderboard</v-btn
                     >
+                      Leaderboard
+                    </v-btn>
                   </template>
 
                   <template v-slot:default="{ isActive }">
@@ -42,8 +43,8 @@
                           color="red"
                           @click="isActive.value = false"
                           icon="mdi-close"
-                        ></v-btn
-                      ></v-toolbar>
+                        ></v-btn>
+                      </v-toolbar>
                       <v-card class="p-6">
                         <v-data-table-virtual
                           :headers="headers"
@@ -53,9 +54,9 @@
                         >
                           <template v-slot:[`item.score`]="{ item }">
                             {{ item.score }}%
-                          </template></v-data-table-virtual
-                        ></v-card
-                      >
+                          </template>
+                        </v-data-table-virtual>
+                      </v-card>
                     </v-card>
                   </template>
                 </v-dialog>
@@ -66,7 +67,7 @@
             </v-card-title>
 
             <!-- Layout 1 -->
-            <v-col class="pl-10 pr-10 pb-10" v-if="Layout">
+            <v-col class="px-4 pb-10" v-if="Layout">
               <div class="d-flex pt-1 justify-center">
                 <v-col cols="12" sm="6">
                   <v-text-field
@@ -85,9 +86,9 @@
               >
                 Click on the right answer
               </h3>
-              <v-col class="flex justify-center" v-if="!submitted"
-                ><v-card
-                  class="rounded-lg shadow-md bg-blue-900 w-full md:w-1/2"
+              <v-col class="flex justify-center" v-if="!submitted">
+                <v-card
+                  class="rounded-lg shadow-md bg-blue-900 w-full md:w-1/2 sm:w-full"
                 >
                   <v-card-title
                     class="font-semibold text-lg text-white py-4 px-6 bg-gradient"
@@ -125,10 +126,10 @@
                       </v-col>
                     </v-row>
                   </v-card-text>
-                </v-card></v-col
-              >
-              <v-col class="flex justify-center" v-if="submitted"
-                ><v-card class="rounded-lg shadow-md w-1/2">
+                </v-card>
+              </v-col>
+              <v-col class="flex justify-center" v-if="submitted">
+                <v-card class="rounded-lg shadow-md w-full md:w-1/2 sm:w-full">
                   <v-card-title
                     class="font-semibold text-lg text-white py-4 px-6 bg-gradient text-center"
                   >
@@ -139,8 +140,8 @@
                   >
                     {{ score }}%
                   </v-card-title>
-                </v-card></v-col
-              >
+                </v-card>
+              </v-col>
 
               <div class="text-center mt-6 space-x-4">
                 <v-btn
@@ -148,7 +149,8 @@
                   class="bg-blue-200 rounded-lg w-36"
                   prepend-icon="mdi-arrow-left"
                   variant="text"
-                  >Previous
+                >
+                  Previous
                 </v-btn>
                 <v-btn
                   v-if="currentQuestionIndex < questions.length - 1"
@@ -156,7 +158,8 @@
                   class="bg-blue-200 rounded-lg w-36"
                   append-icon="mdi-arrow-right"
                   variant="text"
-                  >Next
+                >
+                  Next
                 </v-btn>
                 <v-btn
                   v-if="currentQuestionIndex === questions.length - 1"
@@ -164,13 +167,14 @@
                   class="bg-blue-800 rounded-lg w-36 text-white"
                   append-icon="mdi-send-outline"
                   variant="text"
-                  >Submit
+                >
+                  Submit
                 </v-btn>
               </div>
             </v-col>
 
             <!-- Layout 2 -->
-            <v-col class="pl-10 pr-10 pb-10" v-if="!Layout">
+            <v-col class="px-4 pb-10" v-if="!Layout">
               <div class="sm:flex pt-1 justify-center">
                 <v-col cols="12" sm="6">
                   <v-text-field
@@ -251,15 +255,16 @@
                   class="bg-green-600 rounded-lg w-56 text-white"
                   append-icon="mdi-send-outline"
                   variant="text"
-                  >Submit
+                >
+                  Submit
                 </v-btn>
               </div>
             </v-col>
             <v-footer class="bg-sky-50">
               <v-col class="text-center" cols="12">
                 <p class="font-satoshi">copyright : mathinenglish.com</p>
-              </v-col></v-footer
-            >
+              </v-col>
+            </v-footer>
           </v-card>
         </v-col>
       </v-row>
