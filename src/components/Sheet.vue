@@ -1,5 +1,5 @@
 <template>
-  <v-container class="fill-height">
+  <v-container class="fill-height max-w-[800px]">
     <v-row class="fill-height d-flex justify-center items-center">
       <v-col cols="12">
         <v-card class="md:w-full sm:w-full bg-sky-50 rounded-lg">
@@ -248,7 +248,7 @@
               <v-btn
                 v-if="!Layout"
                 @click="calculateScoreLayout2"
-                class="bg-green-600 rounded-lg text-white"
+                class="bg-green-600 rounded-lg text-white w-full sm:w-40 md:w-40"
                 append-icon="mdi-send-outline"
                 variant="text"
               >
