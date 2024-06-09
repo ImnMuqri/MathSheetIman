@@ -1,116 +1,230 @@
 <template>
   <v-container class="fill-height">
-    <v-responsive class="fill-height mx-auto max-w-[800px]">
-      <v-row class="fill-height d-flex justify-center items-center">
-        <v-col cols="12">
-          <v-card class="md:w-full sm:w-full w-11/12 bg-sky-50 rounded-lg">
-            <v-row class="p-6">
-              <v-col class="text-center text-md-left text-sm-left">
-                <v-btn
-                  @click="changeLayout"
-                  variant="text"
-                  prepend-icon="mdi-eye-settings"
-                  class="sm:w-40 w-full rounded-lg bg-blue-200"
-                >
-                  Change Layout
-                </v-btn>
-              </v-col>
-              <v-col class="text-center text-md-right text-sm-right">
-                <v-dialog
-                  transition="dialog-bottom-transition"
-                  class="w-1/2 h-full"
-                >
-                  <template v-slot:activator="{ props: activatorProps }">
-                    <v-btn
-                      variant="text"
-                      v-bind="activatorProps"
-                      class="sm:w-40 w-full rounded-lg bg-yellow-400 font-satoshi"
-                      prepend-icon="mdi-crown"
-                    >
-                      Leaderboard
-                    </v-btn>
-                  </template>
+    <v-row class="fill-height d-flex justify-center items-center">
+      <v-col cols="12">
+        <v-card class="md:w-full sm:w-full bg-sky-50 rounded-lg">
+          <v-row class="p-6">
+            <v-col class="text-center text-md-left text-sm-left">
+              <v-btn
+                @click="changeLayout"
+                variant="text"
+                prepend-icon="mdi-eye-settings"
+                class="sm:w-40 w-full rounded-lg bg-blue-200"
+              >
+                Change Layout
+              </v-btn>
+            </v-col>
+            <v-col class="text-center text-md-right text-sm-right">
+              <v-dialog
+                transition="dialog-bottom-transition"
+                class="w-1/2 h-full"
+              >
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-btn
+                    variant="text"
+                    v-bind="activatorProps"
+                    class="sm:w-40 w-full rounded-lg bg-yellow-400 font-satoshi"
+                    prepend-icon="mdi-crown"
+                  >
+                    Leaderboard
+                  </v-btn>
+                </template>
 
-                  <template v-slot:default="{ isActive }">
-                    <v-card rounded="lg">
-                      <v-toolbar
-                        class="text-center bg-yellow-300 pr-2 pl-8"
-                        title="Leaderboard"
+                <template v-slot:default="{ isActive }">
+                  <v-card rounded="lg">
+                    <v-toolbar
+                      class="text-center bg-yellow-300 pr-2 pl-8"
+                      title="Leaderboard"
+                    >
+                      <v-btn
+                        size="small"
+                        variant="tonal"
+                        color="red"
+                        @click="isActive.value = false"
+                        icon="mdi-close"
+                      ></v-btn>
+                    </v-toolbar>
+                    <v-card class="p-6">
+                      <v-data-table-virtual
+                        :headers="headers"
+                        :items="players"
+                        height="400"
+                        item-value="name"
                       >
-                        <v-btn
-                          size="small"
-                          variant="tonal"
-                          color="red"
-                          @click="isActive.value = false"
-                          icon="mdi-close"
-                        ></v-btn>
-                      </v-toolbar>
-                      <v-card class="p-6">
-                        <v-data-table-virtual
-                          :headers="headers"
-                          :items="players"
-                          height="400"
-                          item-value="name"
-                        >
-                          <template v-slot:[`item.score`]="{ item }">
-                            {{ item.score }}%
-                          </template>
-                        </v-data-table-virtual>
-                      </v-card>
+                        <template v-slot:[`item.score`]="{ item }">
+                          {{ item.score }}%
+                        </template>
+                      </v-data-table-virtual>
                     </v-card>
-                  </template>
-                </v-dialog>
+                  </v-card>
+                </template>
+              </v-dialog>
+            </v-col>
+          </v-row>
+          <v-card-title class="text-center pt-6 font-satoshi font-bold">
+            Rounding Off To Nearest 10
+          </v-card-title>
+
+          <!-- Layout 1 -->
+          <v-col class="px-4 pb-10" v-if="Layout">
+            <div class="d-flex pt-1 justify-center">
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  v-model="name"
+                  hide-details
+                  clearable
+                  label="Name"
+                  variant="outlined"
+                  class="text-black font-bold ml-2"
+                ></v-text-field>
+              </v-col>
+            </div>
+
+            <h3
+              class="text-center mt-6 mb-4 text-lg font-thin font-satoshi text-black"
+            >
+              Click on the right answer
+            </h3>
+            <v-col class="flex justify-center" v-if="!submitted">
+              <v-card
+                class="rounded-lg shadow-md bg-blue-900 w-full md:w-1/2 sm:w-full"
+              >
+                <v-card-title
+                  class="font-semibold text-lg text-white py-4 px-6 bg-gradient"
+                >
+                  {{ currentQuestion.name }}
+                  <v-progress-linear
+                    :model-value="currentQuestionIndex + 1"
+                    :max="questions.length"
+                  ></v-progress-linear>
+                </v-card-title>
+                <p class="font-medium text-lg text-white py-4 px-6">
+                  {{ currentQuestion.question }}
+                </p>
+                <v-card-text>
+                  <v-radio-group v-model="currentQuestion.selectedAnswerIndex">
+                    <v-radio
+                      v-for="(answer, idx) in currentQuestion.answers"
+                      :key="idx"
+                      :label="answer"
+                      :value="idx"
+                      class="text-white"
+                    ></v-radio>
+                  </v-radio-group>
+                  <v-row justify="end">
+                    <v-col cols="auto">
+                      <v-btn
+                        variant="text"
+                        class="bg-red rounded-lg"
+                        @click="clearSelection1()"
+                      >
+                        Clear
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-card>
+            </v-col>
+            <v-col class="flex justify-center" v-if="submitted">
+              <v-card class="rounded-lg shadow-md w-full md:w-1/2 sm:w-full">
+                <v-card-title
+                  class="font-semibold text-lg text-white py-4 px-6 bg-gradient text-center"
+                >
+                  {{ name }}'s Score
+                </v-card-title>
+                <v-card-title
+                  class="font-semibold text-xl pb-6 text-white py-4 px-6 bg-gradient text-center"
+                >
+                  {{ score }}%
+                </v-card-title>
+              </v-card>
+            </v-col>
+
+            <div class="text-center mt-6 space-x-4">
+              <v-btn
+                @click="previousQuestion"
+                class="bg-blue-200 rounded-lg w-36"
+                prepend-icon="mdi-arrow-left"
+                variant="text"
+              >
+                Previous
+              </v-btn>
+              <v-btn
+                v-if="currentQuestionIndex < questions.length - 1"
+                @click="nextQuestion"
+                class="bg-blue-200 rounded-lg w-36"
+                append-icon="mdi-arrow-right"
+                variant="text"
+              >
+                Next
+              </v-btn>
+              <v-btn
+                v-if="currentQuestionIndex === questions.length - 1"
+                @click="calculateScoreLayout1"
+                class="bg-blue-800 rounded-lg w-36 text-white"
+                append-icon="mdi-send-outline"
+                variant="text"
+              >
+                Submit
+              </v-btn>
+            </div>
+          </v-col>
+
+          <!-- Layout 2 -->
+          <v-col class="px-4 pb-10" v-if="!Layout">
+            <v-row>
+              <v-col cols="12" sm="6" class="mb-4">
+                <v-text-field
+                  v-model="name"
+                  hide-details
+                  clearable
+                  label="Name"
+                  variant="outlined"
+                  class="text-black font-bold ml-2"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" class="mb-4">
+                <v-text-field
+                  v-model="score"
+                  hide-details
+                  readonly
+                  label="Score"
+                  variant="outlined"
+                  class="text-black font-bold ml-2"
+                ></v-text-field>
               </v-col>
             </v-row>
-            <v-card-title class="text-center pt-6 font-satoshi font-bold">
-              Rounding Off To Nearest 10
-            </v-card-title>
 
-            <!-- Layout 1 -->
-            <v-col class="px-4 pb-10" v-if="Layout">
-              <div class="d-flex pt-1 justify-center">
-                <v-col cols="12" sm="6">
-                  <v-text-field
-                    v-model="name"
-                    hide-details
-                    clearable
-                    label="Name"
-                    variant="outlined"
-                    class="text-black font-bold ml-2"
-                  ></v-text-field>
-                </v-col>
-              </div>
+            <h3
+              class="text-center mt-6 mb-4 text-lg font-thin font-satoshi text-black"
+            >
+              Click on the right answer
+            </h3>
 
-              <h3
-                class="text-center mt-6 mb-4 text-lg font-thin font-satoshi text-black"
+            <v-row>
+              <v-col
+                v-for="(question, index) in questions"
+                :key="index"
+                cols="12"
+                md="6"
+                class="mb-4"
               >
-                Click on the right answer
-              </h3>
-              <v-col class="flex justify-center" v-if="!submitted">
-                <v-card
-                  class="rounded-lg shadow-md bg-blue-900 w-full md:w-1/2 sm:w-full"
-                >
+                <v-card class="rounded-lg shadow-md bg-blue-900 w-full">
                   <v-card-title
                     class="font-semibold text-lg text-white py-4 px-6 bg-gradient"
                   >
-                    {{ currentQuestion.name }}
-                    <v-progress-linear
-                      :model-value="currentQuestionIndex + 1"
-                      :max="questions.length"
-                    ></v-progress-linear>
+                    {{ question.name }}
                   </v-card-title>
                   <p class="font-medium text-lg text-white py-4 px-6">
-                    {{ currentQuestion.question }}
+                    {{ question.question }}
                   </p>
                   <v-card-text>
-                    <v-radio-group
-                      v-model="currentQuestion.selectedAnswerIndex"
-                    >
+                    <v-radio-group v-model="question.selectedAnswerIndex">
                       <v-radio
-                        v-for="(answer, idx) in currentQuestion.answers"
+                        v-for="(answer, idx) in question.answers"
                         :key="idx"
                         :label="answer"
-                        :value="idx"
+                        :value="answer"
                         class="text-white"
                       ></v-radio>
                     </v-radio-group>
@@ -119,7 +233,7 @@
                         <v-btn
                           variant="text"
                           class="bg-red rounded-lg"
-                          @click="clearSelection1()"
+                          @click="clearSelection(index)"
                         >
                           Clear
                         </v-btn>
@@ -128,147 +242,29 @@
                   </v-card-text>
                 </v-card>
               </v-col>
-              <v-col class="flex justify-center" v-if="submitted">
-                <v-card class="rounded-lg shadow-md w-full md:w-1/2 sm:w-full">
-                  <v-card-title
-                    class="font-semibold text-lg text-white py-4 px-6 bg-gradient text-center"
-                  >
-                    {{ name }}'s Score
-                  </v-card-title>
-                  <v-card-title
-                    class="font-semibold text-xl pb-6 text-white py-4 px-6 bg-gradient text-center"
-                  >
-                    {{ score }}%
-                  </v-card-title>
-                </v-card>
-              </v-col>
+            </v-row>
 
-              <div class="text-center mt-6 space-x-4">
-                <v-btn
-                  @click="previousQuestion"
-                  class="bg-blue-200 rounded-lg w-36"
-                  prepend-icon="mdi-arrow-left"
-                  variant="text"
-                >
-                  Previous
-                </v-btn>
-                <v-btn
-                  v-if="currentQuestionIndex < questions.length - 1"
-                  @click="nextQuestion"
-                  class="bg-blue-200 rounded-lg w-36"
-                  append-icon="mdi-arrow-right"
-                  variant="text"
-                >
-                  Next
-                </v-btn>
-                <v-btn
-                  v-if="currentQuestionIndex === questions.length - 1"
-                  @click="calculateScoreLayout1"
-                  class="bg-blue-800 rounded-lg w-36 text-white"
-                  append-icon="mdi-send-outline"
-                  variant="text"
-                >
-                  Submit
-                </v-btn>
-              </div>
-            </v-col>
-
-            <!-- Layout 2 -->
-            <v-col class="px-4 pb-10" v-if="!Layout">
-              <div class="sm:flex pt-1 justify-center">
-                <v-col cols="12" sm="6">
-                  <v-text-field
-                    v-model="name"
-                    hide-details
-                    clearable
-                    label="Name"
-                    variant="outlined"
-                    class="text-black font-bold ml-2"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6">
-                  <v-text-field
-                    v-model="score"
-                    hide-details
-                    readonly
-                    label="Score"
-                    variant="outlined"
-                    class="text-black font-bold ml-2"
-                  ></v-text-field>
-                </v-col>
-              </div>
-
-              <h3
-                class="text-center mt-6 mb-4 text-lg font-thin font-satoshi text-black"
+            <div class="text-center mt-6 space-x-4">
+              <v-btn
+                v-if="!Layout"
+                @click="calculateScoreLayout2"
+                class="bg-green-600 rounded-lg text-white"
+                append-icon="mdi-send-outline"
+                variant="text"
               >
-                Click on the right answer
-              </h3>
-              <v-col class="flex justify-center" v-if="!submitted">
-                <v-row>
-                  <v-col
-                    v-for="(question, index) in questions"
-                    :key="index"
-                    cols="12"
-                    md="6"
-                    class="mb-4"
-                  >
-                    <v-card class="rounded-lg shadow-md bg-blue-900 w-full">
-                      <v-card-title
-                        class="font-semibold text-lg text-white py-4 px-6 bg-gradient"
-                      >
-                        {{ question.name }}
-                      </v-card-title>
-                      <p class="font-medium text-lg text-white py-4 px-6">
-                        {{ question.question }}
-                      </p>
-                      <v-card-text>
-                        <v-radio-group v-model="question.selectedAnswerIndex">
-                          <v-radio
-                            v-for="(answer, idx) in question.answers"
-                            :key="idx"
-                            :label="answer"
-                            :value="answer"
-                            class="text-white"
-                          ></v-radio>
-                        </v-radio-group>
-                        <v-row justify="end">
-                          <v-col cols="auto">
-                            <v-btn
-                              variant="text"
-                              class="bg-red rounded-lg"
-                              @click="clearSelection(index)"
-                            >
-                              Clear
-                            </v-btn>
-                          </v-col>
-                        </v-row>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-              </v-col>
+                Submit
+              </v-btn>
+            </div>
+          </v-col>
 
-              <div class="text-center mt-6 space-x-4">
-                <v-btn
-                  v-if="!Layout"
-                  @click="calculateScoreLayout2"
-                  class="bg-green-600 rounded-lg w-56 text-white"
-                  append-icon="mdi-send-outline"
-                  variant="text"
-                >
-                  Submit
-                </v-btn>
-              </div>
+          <v-footer class="bg-sky-50">
+            <v-col class="text-center" cols="12">
+              <p class="font-satoshi">copyright : mathinenglish.com</p>
             </v-col>
-            <v-footer class="bg-sky-50">
-              <v-col class="text-center" cols="12">
-                <p class="font-satoshi">copyright : mathinenglish.com</p>
-              </v-col>
-            </v-footer>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-responsive>
+          </v-footer>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
