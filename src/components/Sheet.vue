@@ -17,7 +17,7 @@
             <v-col class="text-center text-md-right text-sm-right">
               <v-dialog
                 transition="dialog-bottom-transition"
-                class="w-1/2 h-full"
+                class="w-full h-full"
               >
                 <template v-slot:activator="{ props: activatorProps }">
                   <v-btn
