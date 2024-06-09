@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { IPlayer } from "../type/Player";
 
-const baseURL = "http://localhost:9000/api";
+const baseURL = "math-sheet-be.vercel.app";
 
 const PlayerServices = {
   getPlayers: async (): Promise<IPlayer[]> => {
