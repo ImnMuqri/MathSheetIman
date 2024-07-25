@@ -12,16 +12,23 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the repository
-                git url: "${env.REPO_URL}", branch: 'main'
+                git url: "${REPO_URL}", branch: 'main'
             }
         }
-         stage('Add Docker') {
+
+        stage('Install Docker') {
             steps {
-                // Checkout the repository
-                docker exec -it myjenkins bash
-                apt-get update -y
-                apt-get install -y docker.io
-                docker --version
+                // Install Docker if it's not already installed
+                script {
+                    sh '''
+                    if ! command -v docker &> /dev/null
+                    then
+                        apt-get update -y
+                        apt-get install -y docker.io
+                        docker --version
+                    fi
+                    '''
+                }
             }
         }
 
