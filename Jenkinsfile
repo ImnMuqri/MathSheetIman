@@ -15,6 +15,15 @@ pipeline {
                 git url: "${env.REPO_URL}", branch: 'main'
             }
         }
+         stage('Add Docker') {
+            steps {
+                // Checkout the repository
+                docker exec -it myjenkins bash
+                apt-get update -y
+                apt-get install -y docker.io
+                docker --version
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
