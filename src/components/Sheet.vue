@@ -259,7 +259,7 @@
 
           <v-footer class="bg-sky-50">
             <v-col class="text-center" cols="12">
-              <p class="font-satoshi">copyright : mathinenglish.com</p>
+              <p class="font-satoshi">copyright : imnmuqri</p>
             </v-col>
           </v-footer>
         </v-card>
@@ -328,55 +328,6 @@ const questions: Ref<Question[]> = ref<Question[]>([
     question: "64 rounded off to nearest 10 is?",
     answers: ["64", "70", "60"],
     correctAnswer: 60,
-    selectedAnswerIndex: null,
-  },
-  {
-    name: "Question 6",
-    question: "0 rounded off to nearest 10 is?",
-    answers: ["10", "1", "0"],
-    correctAnswer: 0,
-    selectedAnswerIndex: null,
-  },
-  {
-    name: "Question 7",
-    question: "98 rounded off to nearest 10 is?",
-    answers: ["80", "100", "89"],
-    correctAnswer: 100,
-    selectedAnswerIndex: null,
-  },
-  {
-    name: "Question 8",
-    question: "199 rounded off to nearest 10 is?",
-    answers: ["190", "100", "200"],
-    correctAnswer: 100,
-    selectedAnswerIndex: null,
-  },
-  {
-    name: "Question 9",
-    question: "94 rounded off to nearest 10 is?",
-    answers: ["100", "94", "90"],
-    correctAnswer: 90,
-    selectedAnswerIndex: null,
-  },
-  {
-    name: "Question 10",
-    question: "165 rounded off to nearest 10 is?",
-    answers: ["160", "170", "150"],
-    correctAnswer: 170,
-    selectedAnswerIndex: null,
-  },
-  {
-    name: "Question 11",
-    question: "445 rounded off to nearest 10 is?",
-    answers: ["450", "440", "500"],
-    correctAnswer: 450,
-    selectedAnswerIndex: null,
-  },
-  {
-    name: "Question 12",
-    question: "999 rounded off to nearest 10 is?",
-    answers: ["990", "100", "909"],
-    correctAnswer: 909,
     selectedAnswerIndex: null,
   },
 ]);
